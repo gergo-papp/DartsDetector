@@ -12,4 +12,12 @@
 
 
 
-// TODO: reference additional headers your program requires here
+// OpenCV
+
+#include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/legacy/legacy.hpp>
+#include <opencv2/legacy/compat.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+
+using namespace cv;
