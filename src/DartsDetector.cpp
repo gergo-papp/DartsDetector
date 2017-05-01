@@ -18,7 +18,7 @@
 
 int main()
 {
-	bool showImages = true;
+	bool showImages = false;
 
 	system("cls");
 	cv::destroyAllWindows();
@@ -27,15 +27,15 @@ int main()
 	// Read images:
 
 	std::cout << "Reading background image.\n";
-	cv::Mat backgroundImage = cv::imread("Images/background.bmp", cv::IMREAD_COLOR);
+	cv::Mat backgroundImage = imread("Images/background.bmp", cv::IMREAD_COLOR);
 
 	std::cout << "Reading Dart Image.\n";
-	cv::Mat dartImage = cv::imread("Images/dart.bmp", cv::IMREAD_COLOR);
+	cv::Mat dartImage = imread("Images/dart.bmp", cv::IMREAD_COLOR);
 
 	if (showImages)
 	{
-		cv::imshow("Background", backgroundImage);
-		cv::imshow("Dart", dartImage);
+		imshow("Background", backgroundImage);
+		imshow("Dart", dartImage);
 	}
 
 
@@ -43,16 +43,16 @@ int main()
 
 	std::cout << "Thresholding background image.\n";
 	cv::Mat grayBackgroundImage;
-	cv::cvtColor(backgroundImage, grayBackgroundImage, cv::COLOR_RGB2GRAY);
+	cvtColor(backgroundImage, grayBackgroundImage, cv::COLOR_RGB2GRAY);
 
 	cv::Mat BWBackgroundImage;
 	auto thresholdValue = 75; // set by trial and error
-	cv::threshold(grayBackgroundImage, BWBackgroundImage, thresholdValue, 255, cv::THRESH_BINARY_INV);
+	threshold(grayBackgroundImage, BWBackgroundImage, thresholdValue, 255, cv::THRESH_BINARY_INV);
 
 	if (showImages)
 	{
-		cv::imshow("Gray background image", grayBackgroundImage);
-		cv::imshow("BW background image", BWBackgroundImage);
+		imshow("Gray background image", grayBackgroundImage);
+		imshow("BW background image", BWBackgroundImage);
 	}
 	
 
@@ -69,11 +69,11 @@ int main()
 
 					cv::Mat maskBackground = (BWBackgroundImage | floodfillImageInverse);
 
-	cv::morphologyEx(BWBackgroundImage, maskBackground, CV_MOP_CLOSE, cv::getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3)), CvPoint(-1, -1), 4);
+	morphologyEx(BWBackgroundImage, maskBackground, CV_MOP_CLOSE, getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3)), CvPoint(-1, -1), 4);
 
 	if (showImages)
 	{
-		cv::imshow("Mask background", maskBackground);
+		imshow("Mask background", maskBackground);
 	}
 
 

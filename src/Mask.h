@@ -1,5 +1,8 @@
 ﻿#pragma once
 
+/*
+ * The constructor takes a background image as input and provides masks for certain regions in the image that correspond to the dart table regions.
+ */
 class Mask
 {
 public:
