@@ -23,8 +23,9 @@ bld/
 [Ll]og/
 
 # OpenCV Build results should be on Git
-!OpenCV/dll/[Dd]ebug/*
-!OpenCV/dll/[Rr]elease/*
+!opencv_ffmpeg310_64.dll
+!opencv_world310d.dll
+!opencv_world310.dll
 
 # Visual Studio 2015 cache/options directory
 .vs/
