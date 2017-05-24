@@ -15,10 +15,11 @@
 
 #include "stdafx.h"
 #include "Mask.h"
+#include "ImFill.h"
 
 int main()
 {
-	bool showImages = false;
+	bool showImages = true;
 
 	system("cls");
 	cv::destroyAllWindows();
@@ -56,20 +57,9 @@ int main()
 	}
 	
 
-	// Implement the matlab 'imfill' function
-	// See: https://www.learnopencv.com/filling-holes-in-an-image-using-opencv-python-c/
-
-	// TODO: Keep 'imfill' implementation or close the image
-
-					cv::Mat floodfillImage = BWBackgroundImage.clone();
-					floodFill(floodfillImage, cv::Point(0, 0), cv::Scalar(255));
-
-					cv::Mat floodfillImageInverse;
-					bitwise_not(floodfillImage, floodfillImageInverse);
-
-					cv::Mat maskBackground = (BWBackgroundImage | floodfillImageInverse);
-
-	morphologyEx(BWBackgroundImage, maskBackground, CV_MOP_CLOSE, getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3)), CvPoint(-1, -1), 4);
+	cv::Mat maskBackground = imfill_holes(BWBackgroundImage);
+	morphologyEx(maskBackground, maskBackground, CV_MOP_CLOSE, getStructuringElement(cv::MORPH_CROSS, cv::Size(5, 5)), CvPoint(-1, -1), 1);
+	morphologyEx(maskBackground, maskBackground, CV_MOP_DILATE, getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3)), CvPoint(-1, -1), 2);
 
 	if (showImages)
 	{
@@ -86,6 +76,7 @@ int main()
 	Mask mask(backgroundImage);
 
 	// Finish
+
 
 	cv::waitKey(0);
 
