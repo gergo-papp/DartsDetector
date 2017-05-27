@@ -8,6 +8,8 @@ class Mask
 public:
 	cv::Mat red;
 	cv::Mat green;
+	cv::Mat white;
+	cv::Mat black;
 	cv::Mat multipliers;
 	cv::Mat multRings;
 	cv::Mat board;
