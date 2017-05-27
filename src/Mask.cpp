@@ -40,11 +40,24 @@ Mask::Mask(cv::Mat image)
 
 	single = board - multRings;
 
-	cv::Mat singleFilled = imfill_holes(single); // TODO: Fix!
+	cv::Mat singleFilled = imfill_holes(single);
 	double_ = board - singleFilled;
 
-	std::vector<cv::Vec3d> circles;
-	cv::HoughCircles(single, circles, CV_HOUGH_GRADIENT, 1, 1);
+
+	cv::Mat innerRing = board - double_ - single;
+	cv::Mat floodfillImage = innerRing.clone();
+	floodFill(floodfillImage, cv::Point(0, 0), cv::Scalar(255));
+	cv::Mat floodfillImageInverse;
+	bitwise_not(floodfillImage, floodfillImageInverse);
+	cv::floodFill(floodfillImageInverse, cv::Point(1, 1), cv::Scalar(255));
+	bitwise_not(floodfillImageInverse, innerRing);
+
+	triple = board - double_ - single;
+	triple -= innerRing;
+
+	outerBull = (multRings - double_ - triple) & green;
+	innerBull = (multRings - double_ - triple) & red;
+
 
 	if (showImages)
 	{
@@ -58,5 +71,8 @@ Mask::Mask(cv::Mat image)
 		imshow("Single", single);
 		imshow("Single filled", singleFilled);
 		imshow("Double", double_);
+		imshow("Triple", triple);
+		imshow("Outer Bull", outerBull);
+		imshow("Inner Bull", innerBull);
 	}
 }
