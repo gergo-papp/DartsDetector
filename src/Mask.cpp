@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "Mask.h"
+#include "ImFill.h"
 
 Mask::Mask(cv::Mat image)
 {
@@ -30,6 +31,20 @@ Mask::Mask(cv::Mat image)
 	morphologyEx(multipliers, multRings, CV_MOP_DILATE, getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3)), CvPoint(-1, -1), 3);
 	morphologyEx(multRings, multRings, CV_MOP_CLOSE, getStructuringElement(cv::MORPH_CROSS, cv::Size(5, 5)), CvPoint(-1, -1), 3);
 
+	cv::Mat tempBoard= imfill_holes(multRings);
+	morphologyEx(tempBoard, board, CV_MOP_CLOSE, getStructuringElement(cv::MORPH_CROSS, cv::Size(15, 15)), CvPoint(-1, -1), 7);
+	morphologyEx(board, board, CV_MOP_DILATE, getStructuringElement(cv::MORPH_CROSS, cv::Size(5, 5)), CvPoint(-1, -1), 5);
+	morphologyEx(board, board, CV_MOP_ERODE, getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3)), CvPoint(-1, -1), 11);
+
+	cv::bitwise_not(board, miss);
+
+	single = board - multRings;
+
+	cv::Mat singleFilled = imfill_holes(single); // TODO: Fix!
+	double_ = board - singleFilled;
+
+	std::vector<cv::Vec3d> circles;
+	cv::HoughCircles(single, circles, CV_HOUGH_GRADIENT, 1, 1);
 
 	if (showImages)
 	{
@@ -37,5 +52,11 @@ Mask::Mask(cv::Mat image)
 		imshow("Green", green);
 		imshow("Multipliers", multipliers);
 		imshow("Multiplier rings", multRings);
+		imshow("Temp Board", tempBoard);
+		imshow("Board", board);
+		imshow("Miss", miss);
+		imshow("Single", single);
+		imshow("Single filled", singleFilled);
+		imshow("Double", double_);
 	}
 }
