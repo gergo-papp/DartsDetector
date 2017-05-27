@@ -73,7 +73,21 @@ int main()
 
 	// Create Point map
 
+	std::cout << "Creating point map.\n";
 	Mask mask(backgroundImage);
+
+	// Center
+
+	std::vector<cv::Point> points;
+	cv::Point center;
+	findNonZero(mask.innerBull, points);
+	for (auto point : points)
+		center += point;
+	center.x /= points.size();
+	center.y /= points.size();
+
+	std::cout << "Center: (" << center.x << ", " << center.y << ").\n";
+
 
 	// Finish
 

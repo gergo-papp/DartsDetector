@@ -4,7 +4,7 @@
 
 Mask::Mask(cv::Mat image)
 {
-	bool showImages = true;
+	bool showImages = false;
 
 	cv::Mat grayImage;
 	cvtColor(image, grayImage, cv::COLOR_RGB2GRAY);
