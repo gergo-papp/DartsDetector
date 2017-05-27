@@ -16,39 +16,12 @@
 #include "stdafx.h"
 #include "Mask.h"
 #include "ImFill.h"
+#include "Utils.h"
 
 int width = 500;
 int height = 500;
 
-int dist(const cv::Point& a, const cv::Point& b)
-{
-	return int(sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2)));
-}
 
-/*std::vector<cv::Vec<int, 4>> filterLines(const std::vector<cv::Vec<int, 4>>&  lines, cv::Point center, const Mask& mask)
-{
-	std::vector<cv::Vec<int, 4>> filteredLines;
-	int rectSize = 20;
-	cv::Rect_<int> centerRectangle = cv::Rect_<int>(center.x - rectSize / 2, center.y - rectSize / 2, rectSize, rectSize);
-	cv::Vec<int, 4> referenceLine;
-	int maxDist = -1;
-
-	for (auto line : lines)
-	{
-		cv::Point a(line[0], line[1]);
-		cv::Point b(line[2], line[3]);
-
-		if (dist(a, b) > maxDist)
-		{
-			maxDist = dist(a, b);
-			referenceLine = line;
-		}
-	}
-
-	filteredLines.push_back(referenceLine);
-
-	return filteredLines;
-}*/
 
 int main()
 {
@@ -62,10 +35,20 @@ int main()
 
 	std::cout << "Reading background image.\n";
 	cv::Mat backgroundImage = imread("Images/DartHigh.jpg", cv::IMREAD_COLOR);
-	cv::GaussianBlur(backgroundImage, backgroundImage, cv::Size(3, 3), 1, 0);
-
+	
 	std::cout << "Reading Dart Image.\n";
 	cv::Mat dartImage = imread("Images/DartHigh.jpg", cv::IMREAD_COLOR);
+
+	if (backgroundImage.empty() || dartImage.empty())
+	{
+		return -1;
+	}
+
+
+
+	// Blur images to reduce noise:
+
+	cv::GaussianBlur(backgroundImage, backgroundImage, cv::Size(3, 3), 1, 0);
 	cv::GaussianBlur(dartImage, dartImage, cv::Size(3, 3), 1, 0);
 
 	if (showImages)
@@ -81,6 +64,7 @@ int main()
 	}
 
 
+
 	// Grey level thresholding:
 
 	std::cout << "Thresholding background image.\n";
@@ -93,7 +77,7 @@ int main()
 
 	if (showImages)
 	{
-		namedWindow("Gray background imaged", cv::WINDOW_NORMAL);
+		namedWindow("Gray background image", cv::WINDOW_NORMAL);
 		namedWindow("BW background image", cv::WINDOW_NORMAL);
 
 		cv::resizeWindow("Gray background imaged", width, height);
@@ -103,7 +87,6 @@ int main()
 		imshow("BW background image", BWBackgroundImage);
 	}
 	
-
 	cv::Mat maskBackground = imfill_holes(BWBackgroundImage);
 	morphologyEx(maskBackground, maskBackground, CV_MOP_CLOSE, getStructuringElement(cv::MORPH_CROSS, cv::Size(5, 5)), CvPoint(-1, -1), 1);
 	morphologyEx(maskBackground, maskBackground, CV_MOP_DILATE, getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3)), CvPoint(-1, -1), 2);
@@ -118,8 +101,10 @@ int main()
 	}
 
 
+
 	// Crop Images
 	// TODO: crop images - only increases performance, not needed now
+
 
 
 	// Create Point map:
@@ -127,56 +112,31 @@ int main()
 	std::cout << "Creating point map.\n";
 	Mask mask(backgroundImage);
 
+
+
 	// Center:
 
-	std::vector<cv::Point> points;
-	cv::Point center;
-	findNonZero(mask.innerBull, points);
-	for (auto point : points)
-		center += point;
-	center.x /= int(points.size());
-	center.y /= int(points.size());
+	cv::Point center = findCenter(mask.innerBull);
 
 	std::cout << "Center: (" << center.x << ", " << center.y << ").\n";
 
-/*	// Edge detection:
 
-	cv::Mat edgeImage;
-	cv::Canny(grayBackgroundImage & mask.board, edgeImage, 150, 200);
-	morphologyEx(edgeImage, edgeImage, CV_MOP_CLOSE, getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3)), CvPoint(-1, -1), 3);
+	// TODO: Assign a value to each pixel:
 
-	// Straight line detection:
+	// TODO: Create vector of values:
 
-	cv::Mat linesImage = backgroundImage.clone();
-
-
-	std::vector<cv::Vec4i> lines;
-	cv::HoughLinesP(edgeImage, lines, 1, CV_PI / 180, 90, 150, 15);
-	lines = filterLines(lines, center, mask);
-	for (size_t i = 0; i < lines.size(); i++)
+	// TODO: Assign a point map to each value:
+	
+	while(false) // TODO: add stopping condition
 	{
-		line(linesImage, cv::Point(lines[i][0], lines[i][1]),
-		     cv::Point(lines[i][2], lines[i][3]), cv::Scalar(0, 0, 255), 3, 8);
+		// TODO: Read pixel from user:
+		/*
+		 * If already assigned to value, return the value.
+		 * Otherwise try to get the closest value.
+		 */
 	}
-	line(linesImage, cv::Point(center.x, center.y),
-		cv::Point(center.x, center.y), cv::Scalar(255, 0, 0), 3, 8);
-	
 
-	if (showImages)
-	{
-		namedWindow("Edges", cv::WINDOW_NORMAL);
-		namedWindow("Lines", cv::WINDOW_NORMAL);
-
-		cv::resizeWindow("Edges", width, height);
-		cv::resizeWindow("Lines", width, height);
-
-		imshow("Edges", edgeImage);
-		imshow("Lines", linesImage);
-	}*/
-	
-
-	// Finish
-
+	// TODO: Finish
 
 	cv::waitKey(0);
 

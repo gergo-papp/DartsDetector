@@ -6,6 +6,8 @@ Mask::Mask(cv::Mat image)
 {
 	bool showImages = true;
 
+	// Pre-process image:
+
 	cv::Mat grayImage;
 	cvtColor(image, grayImage, cv::COLOR_RGB2GRAY);
 
@@ -15,6 +17,10 @@ Mask::Mask(cv::Mat image)
 	regions[2] = regions[2] - grayImage;
 	regions[1] = regions[1] - grayImage;
 
+
+
+	// red, green
+
 	cv::Mat redRegion;
 	cv::Mat greenRegion;
 
@@ -23,14 +29,18 @@ Mask::Mask(cv::Mat image)
 
 	morphologyEx(redRegion, red, CV_MOP_CLOSE, getStructuringElement(cv::MORPH_CROSS, cv::Size(5, 5)), CvPoint(-1, -1), 3);
 	morphologyEx(red, red, CV_MOP_ERODE, getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3)), CvPoint(-1, -1), 1);
-	//cv::morphologyEx(greenRegion, green, CV_MOP_CLOSE, cv::getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3)), CvPoint(-1, -1), 1);
 	morphologyEx(greenRegion, green, CV_MOP_ERODE, getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3)), CvPoint(-1, -1), 1);
+
+
+	// multipliers, multRings
 
 	multipliers = red + green;
 
-
 	morphologyEx(multipliers, multRings, CV_MOP_DILATE, getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3)), CvPoint(-1, -1), 3);
 	morphologyEx(multRings, multRings, CV_MOP_CLOSE, getStructuringElement(cv::MORPH_CROSS, cv::Size(5, 5)), CvPoint(-1, -1), 3);
+
+
+	// board, miss
 
 	cv::Mat tempBoard= imfill_holes(multRings);
 	morphologyEx(tempBoard, board, CV_MOP_CLOSE, getStructuringElement(cv::MORPH_CROSS, cv::Size(15, 15)), CvPoint(-1, -1), 7);
@@ -39,11 +49,13 @@ Mask::Mask(cv::Mat image)
 
 	cv::bitwise_not(board, miss);
 
+
+	// single, double_, triple
+
 	single = board - multRings;
 
 	cv::Mat singleFilled = imfill_holes(single);
 	double_ = board - singleFilled;
-
 
 	cv::Mat innerRing = board - double_ - single;
 	cv::Mat floodfillImage = innerRing.clone();
@@ -56,8 +68,14 @@ Mask::Mask(cv::Mat image)
 	triple = board - double_ - single;
 	triple -= innerRing;
 
+
+	// outerBull, innerBull
+
 	outerBull = (multRings - double_ - triple) & green;
 	innerBull = (multRings - double_ - triple) & red;
+
+
+	// black, white
 
 	cv::Mat BWImage;
 	cv::threshold(grayImage, BWImage, 100, 255, CV_THRESH_BINARY);
@@ -69,7 +87,6 @@ Mask::Mask(cv::Mat image)
 	morphologyEx(BWImage, BWImage, CV_MOP_OPEN, getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3)), CvPoint(-1, -1), 2);
 	morphologyEx(BWImage, BWImage, CV_MOP_CLOSE, getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3)), CvPoint(-1, -1), 2);
 
-
 	morphologyEx(innerRing, innerRing, CV_MOP_DILATE, getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3)), CvPoint(-1, -1), 8);
 	white = BWImage - innerRing;
 	morphologyEx(white, white, CV_MOP_OPEN, getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3)), CvPoint(-1, -1), 1);
@@ -77,6 +94,9 @@ Mask::Mask(cv::Mat image)
 	black = board - BWImage - innerRing;
 	morphologyEx(black, black, CV_MOP_OPEN, getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3)), CvPoint(-1, -1), 1);
 
+
+
+	// Display images:
 
 	if (showImages)
 	{
