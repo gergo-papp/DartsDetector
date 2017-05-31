@@ -17,15 +17,143 @@
 #include "Mask.h"
 #include "ImFill.h"
 #include "Utils.h"
+#include "Labeling.h"
 
 int width = 500;
 int height = 500;
 
+Mask mask;
+cv::Point2i center;
+Labeling labels;
 
+void ObjectInfoCallBack(int event, int x, int y, int flags, void* param)
+{
+	if (event == CV_EVENT_LBUTTONDOWN)
+	{
+		cv::Mat_<cv::Vec3b>* src = static_cast<cv::Mat_<cv::Vec3b>*>(param);
+		cv::Point2i pixelLoc(x, y);
+
+		std::cout << "\n";
+
+		if (mask.miss(pixelLoc) == 255)
+		{
+			std::cout << "Miss!";
+			return;
+		}
+
+		if (mask.innerBull(pixelLoc) == 255)
+		{
+			std::cout << "2 x 25";
+			return;
+		}
+		if (mask.outerBull(pixelLoc) == 255)
+		{
+			std::cout << "25";
+			return;
+		}
+		
+		if (mask.triple(pixelLoc) == 255)
+		{
+			std::cout << "3 x ";
+		}
+		else if (mask.double_(pixelLoc) == 255)
+		{
+			std::cout << "2 x ";
+		}
+
+
+		/*
+		if (labels.slice_1(pixelLoc) == 255)
+		{
+			std::cout << "1";
+		}
+		else if (labels.slice_2(pixelLoc) == 255)
+		{
+			std::cout << "2";
+		}
+		else if (labels.slice_3(pixelLoc) == 255)
+		{
+			std::cout << "3";
+		}
+		else if (labels.slice_4(pixelLoc) == 255)
+		{
+			std::cout << "4";
+		}
+		else if (labels.slice_5(pixelLoc) == 255)
+		{
+			std::cout << "5";
+		}
+		else if (labels.slice_6(pixelLoc) == 255)
+		{
+			std::cout << "6";
+		}
+		else if (labels.slice_7(pixelLoc) == 255)
+		{
+			std::cout << "7";
+		}
+		else if (labels.slice_8(pixelLoc) == 255)
+		{
+			std::cout << "8";
+		}
+		else if (labels.slice_9(pixelLoc) == 255)
+		{
+			std::cout << "9";
+		}
+		else if (labels.slice_10(pixelLoc) == 255)
+		{
+			std::cout << "10";
+		}
+		else if (labels.slice_11(pixelLoc) == 255)
+		{
+			std::cout << "11";
+		}
+		else if (labels.slice_12(pixelLoc) == 255)
+		{
+			std::cout << "12";
+		}
+		else if (labels.slice_13(pixelLoc) == 255)
+		{
+			std::cout << "13";
+		}
+		else if (labels.slice_14(pixelLoc) == 255)
+		{
+			std::cout << "14";
+		}
+		else if (labels.slice_15(pixelLoc) == 255)
+		{
+			std::cout << "15";
+		}
+		else if (labels.slice_16(pixelLoc) == 255)
+		{
+			std::cout << "16";
+		}
+		else if (labels.slice_17(pixelLoc) == 255)
+		{
+			std::cout << "17";
+		}
+		else if (labels.slice_18(pixelLoc) == 255)
+		{
+			std::cout << "18";
+		}
+		else if (labels.slice_19(pixelLoc) == 255)
+		{
+			std::cout << "19";
+		}
+		else if (labels.slice_20(pixelLoc) == 255)
+		{
+			std::cout << "20";
+		}
+		*/
+		
+		// TODO: Get value
+		std::cout << "?";
+
+	}
+}
 
 int main()
 {
-	bool showImages = true;
+	bool showImages = false;
 
 	system("cls");
 	cv::destroyAllWindows();
@@ -110,18 +238,21 @@ int main()
 	// Create Point map:
 
 	std::cout << "Creating point map.\n";
-	Mask mask(backgroundImage);
+	mask = Mask(backgroundImage);
 
 
 
 	// Center:
 
-	cv::Point center = findCenter(mask.innerBull);
+	center = findCenter(mask.innerBull);
 
 	std::cout << "Center: (" << center.x << ", " << center.y << ").\n";
 
 
 	// TODO: Assign a value to each pixel:
+
+	labels = Labeling(mask.white, mask.black, center);
+
 
 	// TODO: Create vector of values:
 
@@ -137,6 +268,11 @@ int main()
 	}
 
 	// TODO: Finish
+
+	namedWindow("Dart Image", cv::WINDOW_NORMAL);
+	cv::resizeWindow("Dart Image", width, height);
+	cv::setMouseCallback("Dart Image", ObjectInfoCallBack, &backgroundImage);
+	imshow("Dart Image", backgroundImage);
 
 	cv::waitKey(0);
 

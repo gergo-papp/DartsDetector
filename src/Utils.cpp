@@ -20,3 +20,44 @@ cv::Point findCenter(const cv::Mat& mat)
 
 	return center;
 }
+
+int objectArea(cv::Mat_<uchar> img, uchar label)
+{
+	int area = 0;
+
+	for (int i = 0; i < img.rows; i++)
+	{
+		for (int j = 0; j < img.cols; j++)
+		{
+			if (img(i, j) == label)
+			{
+				area++;
+			}
+		}
+	}
+
+	return area;
+}
+
+cv::Point2i centerOfMass(cv::Mat_<uchar> img, uchar color, int area)
+{
+	int centerRow = 0;
+	int centerCol = 0;
+
+	for (int i = 0; i < img.rows; i++)
+	{
+		for (int j = 0; j < img.cols; j++)
+		{
+			if (img(i, j) == color)
+			{
+				centerRow += i;
+				centerCol += j;
+			}
+		}
+	}
+
+	centerRow /= area;
+	centerCol /= area;
+
+	return cv::Point2i(centerRow, centerCol);
+}

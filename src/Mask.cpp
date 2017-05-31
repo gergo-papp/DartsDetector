@@ -2,9 +2,13 @@
 #include "Mask.h"
 #include "ImFill.h"
 
+Mask::Mask()
+{
+}
+
 Mask::Mask(cv::Mat image)
 {
-	bool showImages = true;
+	bool showImages = false;
 
 	// Pre-process image:
 

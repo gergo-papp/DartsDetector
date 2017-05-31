@@ -6,19 +6,20 @@
 class Mask
 {
 public:
-	cv::Mat red;
-	cv::Mat green;
-	cv::Mat white;
-	cv::Mat black;
-	cv::Mat multipliers;
-	cv::Mat multRings;
-	cv::Mat board;
-	cv::Mat miss;
-	cv::Mat single;
-	cv::Mat double_;
-	cv::Mat triple;
-	cv::Mat outerBull;
-	cv::Mat innerBull;
+	cv::Mat_<uchar> red;
+	cv::Mat_<uchar> green;
+	cv::Mat_<uchar> white;
+	cv::Mat_<uchar> black;
+	cv::Mat_<uchar> multipliers;
+	cv::Mat_<uchar> multRings;
+	cv::Mat_<uchar> board;
+	cv::Mat_<uchar> miss;
+	cv::Mat_<uchar> single;
+	cv::Mat_<uchar> double_;
+	cv::Mat_<uchar> triple;
+	cv::Mat_<uchar> outerBull;
+	cv::Mat_<uchar> innerBull;
 
+	Mask ();
 	Mask (cv::Mat image);
 };
