@@ -45,6 +45,20 @@ cv::Mat_<uchar> label(cv::Mat_<uchar> img)
 	return labels;
 }
 
+void setValuesFromLabel(const cv::Mat_<unsigned char> labeledImg, cv::Mat_<unsigned char> values, int label, int value)
+{
+	for (int row = 1; row < labeledImg.rows - 1; row++)
+	{
+		for (int col = 1; col < labeledImg.cols - 1; col++)
+		{
+			if (labeledImg(row, col) == label)
+			{
+				values(row, col) = value;
+			}
+		}
+	}
+}
+
 void Labeling::SetLabels(cv::Mat_<uchar> whiteLabels, cv::Mat_<uchar> blackLabels, cv::Mat_<uchar> labeledImg, cv::Point2i center)
 {
 	cv::Mat_<uchar> destImg(whiteLabels.rows, whiteLabels.cols);
@@ -73,113 +87,187 @@ void Labeling::SetLabels(cv::Mat_<uchar> whiteLabels, cv::Mat_<uchar> blackLabel
 
 	// Assign regions
 
-	for (auto iWhite = 0; iWhite < whiteMax; iWhite++)
+	for (auto i = 0; i < whiteMax; i++)
 	{
-		int area = objectArea(whiteLabels, iWhite);
+		int area = objectArea(whiteLabels, i);
 		if (area > 1000)
 		{
-			cv::Point2i regionCenter = centerOfMass(whiteLabels, iWhite, area);
+			cv::Point2i regionCenter = centerOfMass(whiteLabels, i, area);
 			auto labelVector = regionCenter - center;
-			auto length = dist(regionCenter, center);
+			// auto length = dist(regionCenter, center);
 
 			float angleRad = atan2(labelVector.y, labelVector.x);
 			float angle = (angleRad > 0 ? angleRad : (2 * CV_PI + angleRad)) * 360 / (2 * CV_PI);
 
-			if ((0 <= angle < 10) || (350 <= angle < 360))
+			if ((0 <= angle && angle < 10) || (350 <= angle && angle < 360))
 			{
-				
+				setValuesFromLabel(whiteLabels, labeledImg, i, 1);
 			}
-			else if (0 * (360 / 20) + 10 <= angle < 1 * (360 / 20) + 10)
+			else if (0 * (360 / 20) + 10 <= angle && angle < 1 * (360 / 20) + 10)
 			{
-
+				setValuesFromLabel(whiteLabels, labeledImg, i, 2);
 			}
-			else if (1 * (360 / 20) + 10 <= angle < 2 * (360 / 20) + 10)
+			else if (1 * (360 / 20) + 10 <= angle && angle < 2 * (360 / 20) + 10)
 			{
-
+				setValuesFromLabel(whiteLabels, labeledImg, i, 3);
 			}
-			else if (2 * (360 / 20) + 10 <= angle < 3 * (360 / 20) + 10)
+			else if (2 * (360 / 20) + 10 <= angle && angle < 3 * (360 / 20) + 10)
 			{
-
+				setValuesFromLabel(whiteLabels, labeledImg, i, 4);
 			}
-			else if (3 * (360 / 20) + 10 <= angle < 4 * (360 / 20) + 10)
+			else if (3 * (360 / 20) + 10 <= angle && angle < 4 * (360 / 20) + 10)
 			{
-
+				setValuesFromLabel(whiteLabels, labeledImg, i, 5);
 			}
-			else if (4 * (360 / 20) + 10 <= angle < 5 * (360 / 20) + 10)
+			else if (4 * (360 / 20) + 10 <= angle && angle < 5 * (360 / 20) + 10)
 			{
-
+				setValuesFromLabel(whiteLabels, labeledImg, i, 6);
 			}
-			else if (5 * (360 / 20) + 10 <= angle < 6 * (360 / 20) + 10)
+			else if (5 * (360 / 20) + 10 <= angle && angle < 6 * (360 / 20) + 10)
 			{
-
+				setValuesFromLabel(whiteLabels, labeledImg, i, 7);
 			}
-			else if (6 * (360 / 20) + 10 <= angle < 7 * (360 / 20) + 10)
+			else if (6 * (360 / 20) + 10 <= angle && angle < 7 * (360 / 20) + 10)
 			{
-
+				setValuesFromLabel(whiteLabels, labeledImg, i, 8);
 			}
-			else if (7 * (360 / 20) + 10 <= angle < 8 * (360 / 20) + 10)
+			else if (7 * (360 / 20) + 10 <= angle && angle < 8 * (360 / 20) + 10)
 			{
-
+				setValuesFromLabel(whiteLabels, labeledImg, i, 9);
 			}
-			else if (8 * (360 / 20) + 10 <= angle < 9 * (360 / 20) + 10)
+			else if (8 * (360 / 20) + 10 <= angle && angle < 9 * (360 / 20) + 10)
 			{
-
+				setValuesFromLabel(whiteLabels, labeledImg, i, 10);
 			}
-			else if (10 * (360 / 20) + 10 <= angle < 11 * (360 / 20) + 10)
+			else if (10 * (360 / 20) + 10 <= angle && angle < 11 * (360 / 20) + 10)
 			{
-
+				setValuesFromLabel(whiteLabels, labeledImg, i, 11);
 			}
-			else if (11 * (360 / 20) + 10 <= angle < 12 * (360 / 20) + 10)
+			else if (11 * (360 / 20) + 10 <= angle && angle < 12 * (360 / 20) + 10)
 			{
-
+				setValuesFromLabel(whiteLabels, labeledImg, i, 12);
 			}
-			else if (12 * (360 / 20) + 10 <= angle < 13 * (360 / 20) + 10)
+			else if (12 * (360 / 20) + 10 <= angle && angle < 13 * (360 / 20) + 10)
 			{
-
+				setValuesFromLabel(whiteLabels, labeledImg, i, 13);
 			}
-			else if (13 * (360 / 20) + 10 <= angle < 14 * (360 / 20) + 10)
+			else if (13 * (360 / 20) + 10 <= angle && angle < 14 * (360 / 20) + 10)
 			{
-
+				setValuesFromLabel(whiteLabels, labeledImg, i, 14);
 			}
-			else if (14 * (360 / 20) + 10 <= angle < 15 * (360 / 20) + 10)
+			else if (14 * (360 / 20) + 10 <= angle && angle < 15 * (360 / 20) + 10)
 			{
-
+				setValuesFromLabel(whiteLabels, labeledImg, i, 15);
 			}
-			else if (15 * (360 / 20) + 10 <= angle < 16 * (360 / 20) + 10)
+			else if (15 * (360 / 20) + 10 <= angle && angle < 16 * (360 / 20) + 10)
 			{
-
+				setValuesFromLabel(whiteLabels, labeledImg, i, 16);
 			}
-			else if (16 * (360 / 20) + 10 <= angle < 17 * (360 / 20) + 10)
+			else if (16 * (360 / 20) + 10 <= angle && angle < 17 * (360 / 20) + 10)
 			{
-
+				setValuesFromLabel(whiteLabels, labeledImg, i, 17);
 			}
-			else if (17 * (360 / 20) + 10 <= angle < 18 * (360 / 20) + 10)
+			else if (17 * (360 / 20) + 10 <= angle && angle < 18 * (360 / 20) + 10)
 			{
-
+				setValuesFromLabel(whiteLabels, labeledImg, i, 18);
 			}
-			else if (18 * (360 / 20) + 10 <= angle < 19 * (360 / 20) + 10)
+			else if (18 * (360 / 20) + 10 <= angle && angle < 19 * (360 / 20) + 10)
 			{
-
+				setValuesFromLabel(whiteLabels, labeledImg, i, 19);
 			}
 		}
 	}
 
-	for (auto iBlack = 0; iBlack < blackMax; iBlack++)
+	for (auto i = 0; i < blackMax; i++)
 	{
-		int area = objectArea(blackLabels, iBlack);
+		int area = objectArea(blackLabels, i);
 		if (area > 1000)
 		{
-			cv::Point2i regionCenter = centerOfMass(whiteLabels, iBlack, area);
+			cv::Point2i regionCenter = centerOfMass(blackLabels, i, area);
 			auto labelVector = regionCenter - center;
-			auto length = dist(regionCenter, center);
+			// auto length = dist(regionCenter, center);
 
 			float angleRad = atan2(labelVector.y, labelVector.x);
 			float angle = ((angleRad / CV_PI) * 180.0);
 
-
+			if ((0 <= angle && angle < 10) || (350 <= angle && angle < 360))
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 1);
+			}
+			else if (0 * (360 / 20) + 10 <= angle && angle < 1 * (360 / 20) + 10)
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 2);
+			}
+			else if (1 * (360 / 20) + 10 <= angle && angle < 2 * (360 / 20) + 10)
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 3);
+			}
+			else if (2 * (360 / 20) + 10 <= angle && angle < 3 * (360 / 20) + 10)
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 4);
+			}
+			else if (3 * (360 / 20) + 10 <= angle && angle < 4 * (360 / 20) + 10)
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 5);
+			}
+			else if (4 * (360 / 20) + 10 <= angle && angle < 5 * (360 / 20) + 10)
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 6);
+			}
+			else if (5 * (360 / 20) + 10 <= angle && angle < 6 * (360 / 20) + 10)
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 7);
+			}
+			else if (6 * (360 / 20) + 10 <= angle && angle < 7 * (360 / 20) + 10)
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 8);
+			}
+			else if (7 * (360 / 20) + 10 <= angle && angle < 8 * (360 / 20) + 10)
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 9);
+			}
+			else if (8 * (360 / 20) + 10 <= angle && angle < 9 * (360 / 20) + 10)
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 10);
+			}
+			else if (10 * (360 / 20) + 10 <= angle && angle < 11 * (360 / 20) + 10)
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 11);
+			}
+			else if (11 * (360 / 20) + 10 <= angle && angle < 12 * (360 / 20) + 10)
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 12);
+			}
+			else if (12 * (360 / 20) + 10 <= angle && angle < 13 * (360 / 20) + 10)
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 13);
+			}
+			else if (13 * (360 / 20) + 10 <= angle && angle < 14 * (360 / 20) + 10)
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 14);
+			}
+			else if (14 * (360 / 20) + 10 <= angle && angle < 15 * (360 / 20) + 10)
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 15);
+			}
+			else if (15 * (360 / 20) + 10 <= angle && angle < 16 * (360 / 20) + 10)
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 16);
+			}
+			else if (16 * (360 / 20) + 10 <= angle && angle < 17 * (360 / 20) + 10)
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 17);
+			}
+			else if (17 * (360 / 20) + 10 <= angle && angle < 18 * (360 / 20) + 10)
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 18);
+			}
+			else if (18 * (360 / 20) + 10 <= angle && angle < 19 * (360 / 20) + 10)
+			{
+				setValuesFromLabel(blackLabels, labeledImg, i, 19);
+			}
 		}
 	}
-
 }
 
 Labeling::Labeling()
@@ -199,7 +287,9 @@ Labeling::Labeling(cv::Mat_<uchar> white, cv::Mat_<uchar> black, cv::Point2i cen
 	// Set labels to their actual value (1 - 20):
 
 	cv::Mat_<uchar> labeledImg(black.rows, black.cols);
+	labeledImg.setTo(0);
 
 	SetLabels(whiteLabels, blackLabels, labeledImg, center);
 
+	fullLabel = labeledImg;
 }

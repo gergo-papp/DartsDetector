@@ -61,93 +61,13 @@ void ObjectInfoCallBack(int event, int x, int y, int flags, void* param)
 			std::cout << "2 x ";
 		}
 
-
-		/*
-		if (labels.slice_1(pixelLoc) == 255)
-		{
-			std::cout << "1";
-		}
-		else if (labels.slice_2(pixelLoc) == 255)
-		{
-			std::cout << "2";
-		}
-		else if (labels.slice_3(pixelLoc) == 255)
-		{
-			std::cout << "3";
-		}
-		else if (labels.slice_4(pixelLoc) == 255)
-		{
-			std::cout << "4";
-		}
-		else if (labels.slice_5(pixelLoc) == 255)
-		{
-			std::cout << "5";
-		}
-		else if (labels.slice_6(pixelLoc) == 255)
-		{
-			std::cout << "6";
-		}
-		else if (labels.slice_7(pixelLoc) == 255)
-		{
-			std::cout << "7";
-		}
-		else if (labels.slice_8(pixelLoc) == 255)
-		{
-			std::cout << "8";
-		}
-		else if (labels.slice_9(pixelLoc) == 255)
-		{
-			std::cout << "9";
-		}
-		else if (labels.slice_10(pixelLoc) == 255)
-		{
-			std::cout << "10";
-		}
-		else if (labels.slice_11(pixelLoc) == 255)
-		{
-			std::cout << "11";
-		}
-		else if (labels.slice_12(pixelLoc) == 255)
-		{
-			std::cout << "12";
-		}
-		else if (labels.slice_13(pixelLoc) == 255)
-		{
-			std::cout << "13";
-		}
-		else if (labels.slice_14(pixelLoc) == 255)
-		{
-			std::cout << "14";
-		}
-		else if (labels.slice_15(pixelLoc) == 255)
-		{
-			std::cout << "15";
-		}
-		else if (labels.slice_16(pixelLoc) == 255)
-		{
-			std::cout << "16";
-		}
-		else if (labels.slice_17(pixelLoc) == 255)
-		{
-			std::cout << "17";
-		}
-		else if (labels.slice_18(pixelLoc) == 255)
-		{
-			std::cout << "18";
-		}
-		else if (labels.slice_19(pixelLoc) == 255)
-		{
-			std::cout << "19";
-		}
-		else if (labels.slice_20(pixelLoc) == 255)
-		{
-			std::cout << "20";
-		}
-		*/
+		int value = labels.fullLabel(pixelLoc);
 		
-		// TODO: Get value
-		std::cout << "?";
-
+		
+		if (value == 0)
+			std::cout << "?"; // TODO: approximate value by the closest slice
+		else
+			std::cout << value;
 	}
 }
 
@@ -249,25 +169,13 @@ int main()
 	std::cout << "Center: (" << center.x << ", " << center.y << ").\n";
 
 
-	// TODO: Assign a value to each pixel:
+	// Assign a value to each pixel:
 
 	labels = Labeling(mask.white, mask.black, center);
 
 
-	// TODO: Create vector of values:
 
-	// TODO: Assign a point map to each value:
-	
-	while(false) // TODO: add stopping condition
-	{
-		// TODO: Read pixel from user:
-		/*
-		 * If already assigned to value, return the value.
-		 * Otherwise try to get the closest value.
-		 */
-	}
-
-	// TODO: Finish
+	// Wait on user input and detect score
 
 	namedWindow("Dart Image", cv::WINDOW_NORMAL);
 	cv::resizeWindow("Dart Image", width, height);
